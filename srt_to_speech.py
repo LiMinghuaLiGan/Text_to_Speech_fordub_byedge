@@ -70,7 +70,7 @@ async def tospeech(text, name="a.mp3",setrate="+0%"):
         '''
         async for i in communicate.run(text,
         codec="audio-24khz-48kbitrate-mono-mp3",
-        voice="Microsoft Server Speech Text to Speech Voice (en-US, AriaNeural)",
+        voice="Microsoft Server Speech Text to Speech Voice (zh-CN,YunxiNeural)",
         # pitch="+0Hz",
         # rate=setrate,
         # volume="+0%",
