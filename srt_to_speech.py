@@ -56,9 +56,9 @@ def main():
     outfile.export("out.wav", format="wav")
 
 
-async def tospeech(text, name="a.mp3",setrate="+0%"):
-    communicate = edge_tts.Communicate()
-    with open(name, 'wb') as f:
+async def tospeech(TEXT, OUTPUT_FILE,VOICE='zh-CN-YunxiNeural'):
+    communicate = edge_tts.Communicate(TEXT, VOICE)
+    with open(OUTPUT_FILE, "wb") as file:
         '''
         text:输入的语句Input text
         codec:#输出的音频文件格式编码方式，默认为Mp3，经过测试该编码方式比较稳定The output audio file format encoding method, the default is Mp3,
@@ -68,16 +68,10 @@ async def tospeech(text, name="a.mp3",setrate="+0%"):
         rate:语速增加量speech speed increase amount 
         volume:音量(响度)增加量Volume (loudness) increase amount
         '''
-        async for i in communicate.run(text,
-        codec="audio-24khz-48kbitrate-mono-mp3",
-        voice="Microsoft Server Speech Text to Speech Voice (zh-CN,YunxiNeural)",
-        # pitch="+0Hz",
-        # rate=setrate,
-        # volume="+0%",
-        ):
-            if i[2] is not None:
-                f.write(i[2])
-    f.close()
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                file.write(chunk["data"])
+    file.close()
 
 def check_mkdir(path):
     """
@@ -95,9 +89,9 @@ if __name__ == "__main__":
 测试过的支持语言
 support language that has been test
 
-en-US,AriaNeural
-ja-JP,NanamiNeural
-zh-CN,YunxiNeural
+en-US-AriaNeural
+ja-JP-NanamiNeural
+zh-CN-YunxiNeural
 
 
 更多语言请参照edge大声朗读语音选项或参考https://juejin.cn/post/7042569859175022605
